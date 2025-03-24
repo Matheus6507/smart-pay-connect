@@ -1,15 +1,14 @@
-import { useEffect } from "react";
-import FadeIn from "@/components/FadeIn";
-import Navbar from "@/components/Navbar";
 import CTAButton from "@/components/CTAButton";
-import Features from "@/components/Features";
-import HowItWorks from "@/components/HowItWorks";
-import Testimonials from "@/components/Testimonials";
-import Partners from "@/components/Partners";
+import FadeIn from "@/components/FadeIn";
 import FAQ from "@/components/FAQ";
+import Features from "@/components/Features";
 import Footer from "@/components/Footer";
+import HowItWorks from "@/components/HowItWorks";
+import Navbar from "@/components/Navbar";
 import TaxSimulator from "@/components/TaxSimulator";
-import { ArrowRight, CheckCircle2, ShieldCheck, Clock, CreditCard } from "lucide-react";
+import Testimonials from "@/components/Testimonials";
+import { ArrowRight, CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
+import { useEffect } from "react";
 
 const Index = () => {
   useEffect(() => {
@@ -88,11 +87,11 @@ const Index = () => {
                 </p>
               </FadeIn>
 
-              <FadeIn delay={200} className="flex flex-col sm:flex-row gap-4">
-                <CTAButton size="lg">
+              <FadeIn delay={200} className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
+                <CTAButton className="w-full">
                   Criar minha conta grátis agora <ArrowRight size={20} />
                 </CTAButton>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-gray-600">
                   Sem mensalidade. Proteção contra fraudes. Pagamento em 1 dia útil.
                 </p>
               </FadeIn>
@@ -163,7 +162,7 @@ const Index = () => {
       <section className="py-10 bg-gray-50">
         <div className="container-custom">
           <FadeIn>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {proofPoints.map((point, index) => (
                 <div key={index} className="flex items-center justify-center gap-2 p-3">
                   <point.icon size={24} className="text-primary shrink-0" />
