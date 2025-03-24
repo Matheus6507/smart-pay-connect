@@ -11,6 +11,7 @@ const PricingPlans = () => {
       description: "Ideal para quem está começando",
       features: [
         "Taxa de 1,99% por transação",
+        "Sem mensalidade ou taxas ocultas",
         "Pagamentos via PIX e cartão",
         "Recebimento em 2 dias úteis",
         "Suporte via email",
@@ -25,12 +26,12 @@ const PricingPlans = () => {
       description: "Perfeito para negócios em crescimento",
       features: [
         "Taxa de 1,49% por transação",
+        "Sem mensalidade ou taxas ocultas",
         "Pagamentos via PIX, cartão e boleto",
         "Recebimento em 1 dia útil",
         "Suporte via email e chat",
         "Checkout personalizado",
-        "Relatórios detalhados",
-        "Integração com e-commerce",
+        "Integração com seu site",
       ],
       popular: true,
       cta: "Experimentar 14 dias grátis",
@@ -41,11 +42,11 @@ const PricingPlans = () => {
       description: "Para negócios estabelecidos",
       features: [
         "Taxa a partir de 0,99% por transação",
+        "Sem mensalidade ou taxas ocultas",
         "Todos os meios de pagamento",
         "Recebimento no mesmo dia (PIX)",
         "Suporte prioritário 24/7",
         "Checkout personalizado",
-        "Relatórios avançados",
         "API completa",
         "Gerenciador de assinaturas",
       ],
@@ -62,7 +63,7 @@ const PricingPlans = () => {
             Planos para Todos os Tamanhos de Negócio
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Escolha o plano ideal para sua empresa e comece a receber pagamentos hoje mesmo
+            Escolha o plano ideal para sua empresa e comece a receber pagamentos hoje mesmo, apenas com taxas por transação
           </p>
         </FadeIn>
 

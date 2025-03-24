@@ -1,5 +1,5 @@
 
-import { BarChart3, Clock, CreditCard, Lock, Percent, Smartphone } from "lucide-react";
+import { Clock, CreditCard, Lock, Smartphone } from "lucide-react";
 import FadeIn from "./FadeIn";
 
 const Features = () => {
@@ -24,16 +24,6 @@ const Features = () => {
       title: "Recebimento Rápido",
       description: "Receba valores de suas vendas em até 1 dia útil diretamente na sua conta bancária.",
     },
-    {
-      icon: Percent,
-      title: "Taxas Competitivas",
-      description: "Tenha acesso às melhores taxas do mercado sem surpresas ou custos ocultos.",
-    },
-    {
-      icon: BarChart3,
-      title: "Relatórios Detalhados",
-      description: "Acompanhe suas vendas em tempo real com dashboards e relatórios completos.",
-    },
   ];
 
   return (
@@ -48,7 +38,7 @@ const Features = () => {
           </p>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {features.map((feature, index) => (
             <FadeIn key={feature.title} delay={index * 150}>
               <div className="p-6 rounded-xl hover:shadow-md transition-all border border-gray-100 h-full">

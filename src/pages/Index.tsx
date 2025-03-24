@@ -11,6 +11,7 @@ import Testimonials from "@/components/Testimonials";
 import Partners from "@/components/Partners";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import TaxSimulator from "@/components/TaxSimulator";
 import { ArrowRight, CheckCircle2, ChevronRight, ShieldCheck, Wallet } from "lucide-react";
 
 const Index = () => {
@@ -128,6 +129,9 @@ const Index = () => {
       {/* Features Section */}
       <Features />
       
+      {/* Tax Simulator Section */}
+      <TaxSimulator />
+      
       {/* How It Works Section */}
       <HowItWorks />
       
@@ -155,7 +159,7 @@ const Index = () => {
                     Comece a receber pagamentos hoje mesmo
                   </h2>
                   <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                    Cadastre-se gratuitamente e comece a aceitar pagamentos em menos de 5 minutos, sem complicações.
+                    Cadastre-se gratuitamente e comece a aceitar pagamentos em menos de 5 minutos, sem complicações ou mensalidades.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4">
                     <CTAButton 
