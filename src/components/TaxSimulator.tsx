@@ -1,12 +1,11 @@
 
-import { useState, useEffect } from "react";
+import FadeIn from "@/components/FadeIn";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import FadeIn from "@/components/FadeIn";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Calculator,
   Calendar,
@@ -15,6 +14,7 @@ import {
   PiggyBank,
   Zap
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // Fee structure based on the CSV data
 const fees = {
@@ -39,7 +39,7 @@ const fees = {
     }
   },
   anticipation: {
-    rate: 0.07, // TaxaAntecipacao (daily rate)
+    rate: 0.07, // TaxaAntecipacao
     automatic: [
       4.3,   // 1 installment
       6.3,   // 2 installments
@@ -131,12 +131,11 @@ const TaxSimulator = () => {
     }
     
     // Calculate final values
-    const totalFeesCalculated = calculatedFeeAmount + calculatedAnticipationFee;
+    const totalFeesCalculated = automaticAnticipation ? calculatedAnticipationFee : calculatedFeeAmount;
     calculatedFinalAmount = amount - totalFeesCalculated;
     
     // Format date
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = date.toLocaleDateString('pt-BR', options);
+    const formattedDate = date.toLocaleDateString('pt-BR', {year: "numeric", month: "numeric", day: "numeric"});
     
     // Update state
     setReceivableAmount(amount);
@@ -270,14 +269,16 @@ const TaxSimulator = () => {
                         <span>R$ {receivableAmount.toFixed(2).replace('.', ',')}</span>
                       </div>
                       
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Taxa da transação:</span>
-                        <span>-R$ {feeAmount.toFixed(2).replace('.', ',')}</span>
-                      </div>
-                      
+                      {paymentMethod === "credit" && !automaticAnticipation && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Taxas:</span>
+                          <span>-R$ {feeAmount.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                      )}
+
                       {paymentMethod === "credit" && automaticAnticipation && installments > 1 && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Taxa de antecipação:</span>
+                          <span className="text-gray-600">Taxas:</span>
                           <span>-R$ {anticipationFee.toFixed(2).replace('.', ',')}</span>
                         </div>
                       )}
