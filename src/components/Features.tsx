@@ -1,16 +1,14 @@
 
-import { 
-  CreditCard, 
-  Lock, 
-  Smartphone, 
-  Clock, 
-  RefreshCcw, 
-  ShieldCheck, 
-  DollarSign, 
-  BarChart, 
-  QrCode, 
-  Link, 
-  Award 
+import {
+  Award,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Link,
+  QrCode,
+  RefreshCcw,
+  ShieldCheck,
+  Smartphone
 } from "lucide-react";
 import FadeIn from "./FadeIn";
 
@@ -45,11 +43,6 @@ const Features = () => {
       icon: DollarSign,
       title: "Split de pagamento automático",
       description: "Divida pagamentos entre parceiros e comissionados automaticamente.",
-    },
-    {
-      icon: BarChart,
-      title: "Dashboard de controle em tempo real",
-      description: "Acompanhe suas vendas e recebimentos com facilidade.",
     },
     {
       icon: QrCode,

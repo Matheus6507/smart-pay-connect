@@ -1,3 +1,5 @@
+import b3 from "@/assets/Logo-B3.png";
+import pci from "@/assets/PCI DSS.png";
 import CTAButton from "@/components/CTAButton";
 import FadeIn from "@/components/FadeIn";
 import FAQ from "@/components/FAQ";
@@ -5,6 +7,7 @@ import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import HowItWorks from "@/components/HowItWorks";
 import Navbar from "@/components/Navbar";
+import ReclameAqui from "@/components/reclame-aqui";
 import TaxSimulator from "@/components/TaxSimulator";
 import Testimonials from "@/components/Testimonials";
 import { ArrowRight, CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
@@ -144,10 +147,10 @@ const Index = () => {
                         <span className="text-gray-600">Transações</span>
                         <span className="font-semibold">143</span>
                       </div>
-                      <div className="flex items-center gap-2 mt-2">
-                        <img src="https://via.placeholder.com/40x20?text=PCI" alt="PCI DSS" className="h-5" />
-                        <img src="https://via.placeholder.com/40x20?text=Reclame" alt="ReclameAqui" className="h-5" />
-                        <img src="https://via.placeholder.com/40x20?text=B3" alt="B3" className="h-5" />
+                      <div className="flex items-center gap-2">
+                        <img src={pci} alt="PCI DSS" className="h-8" />
+                        <ReclameAqui />
+                        <img src={b3} alt="B3" className="h-12 invert" />
                       </div>
                     </div>
                   </div>
@@ -159,7 +162,7 @@ const Index = () => {
       </section>
 
       {/* 2. Prova Social */}
-      <section className="py-10 bg-gray-50">
+      {/* <section className="py-10 bg-gray-50">
         <div className="container-custom">
           <FadeIn>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -172,7 +175,7 @@ const Index = () => {
             </div>
           </FadeIn>
         </div>
-      </section>
+      </section> */}
       
       {/* 3. Os Problemas */}
       <section className="py-16 bg-white">

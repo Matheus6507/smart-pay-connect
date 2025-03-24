@@ -1,8 +1,9 @@
 
-import { useState, useEffect } from "react";
+import logo from '@/assets/logo.png';
 import { cn } from "@/lib/utils";
-import CTAButton from "./CTAButton";
 import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import CTAButton from "./CTAButton";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,10 +28,7 @@ const Navbar = () => {
       <div className="container-custom flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center">
-          <div className="text-primary-600 font-display font-bold text-2xl">
-            <span className="text-primary">Recebe</span>
-            <span className="text-secondary">Aqui</span>
-          </div>
+          <img src={logo} alt="" className='w-44' />
         </a>
 
         {/* Desktop Navigation */}
