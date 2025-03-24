@@ -1,6 +1,12 @@
 
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import ios from '@/assets/badge-app-store.png';
+import android from '@/assets/badge-google-play.png';
+import b3 from '@/assets/Logo-B3.png';
+import logo from '@/assets/logo.png';
+import pci from '@/assets/PCI DSS.png';
+import { Briefcase, Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import ReclameAqui from './reclame-aqui';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,10 +18,9 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <div className="mb-6">
-              <div className="font-display font-bold text-2xl mb-4">
-                <span className="text-primary">Recebe</span>
-                <span className="text-secondary">Aqui</span>
-              </div>
+              <a href="/" className="flex items-center">
+                <img src={logo} alt="" className='w-44' />
+              </a>
               <p className="text-gray-400 mb-4">
                 Soluções de pagamento simples e seguras para pequenas empresas e profissionais autônomos.
               </p>
@@ -24,15 +29,19 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start">
                 <MapPin size={20} className="text-primary shrink-0 mr-2 mt-1" />
-                <p className="text-gray-400">Av. Paulista, 1000 - São Paulo, SP</p>
+                <p className="text-gray-400">Av. do Contorno, 6664 - Belo Horizonte, MG</p>
               </div>
               <div className="flex items-center">
                 <Phone size={20} className="text-primary shrink-0 mr-2" />
-                <p className="text-gray-400">(11) 4002-8922</p>
+                <p className="text-gray-400">(31) 99265-5005</p>
               </div>
               <div className="flex items-center">
                 <Mail size={20} className="text-primary shrink-0 mr-2" />
                 <p className="text-gray-400">contato@recebeaqui.com.br</p>
+              </div>
+              <div className="flex items-center">
+                <Briefcase size={20} className="text-primary shrink-0 mr-2" />
+                <p className="text-gray-400">CNPJ: 25.369.743/0001-64</p>
               </div>
             </div>
           </div>
@@ -43,12 +52,12 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link to="/sobre" className="text-gray-400 hover:text-white transition-colors">
-                  Sobre Nós
+                  Contato
                 </Link>
               </li>
               <li>
                 <Link to="/carreiras" className="text-gray-400 hover:text-white transition-colors">
-                  Carreiras
+                  Cadastre-se
                 </Link>
               </li>
               <li>
@@ -58,12 +67,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/parceiros" className="text-gray-400 hover:text-white transition-colors">
-                  Programa de Parceiros
-                </Link>
-              </li>
-              <li>
-                <Link to="/imprensa" className="text-gray-400 hover:text-white transition-colors">
-                  Imprensa
+                  Dúvidas
                 </Link>
               </li>
             </ul>
@@ -75,22 +79,17 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link to="/pagamentos" className="text-gray-400 hover:text-white transition-colors">
-                  Gateway de Pagamentos
+                  Antecipação de recebíveis
                 </Link>
               </li>
               <li>
                 <Link to="/assinaturas" className="text-gray-400 hover:text-white transition-colors">
-                  Assinaturas Recorrentes
-                </Link>
-              </li>
-              <li>
-                <Link to="/links" className="text-gray-400 hover:text-white transition-colors">
-                  Links de Pagamento
+                  Pagamentos recorrentes
                 </Link>
               </li>
               <li>
                 <Link to="/checkout" className="text-gray-400 hover:text-white transition-colors">
-                  Checkout Online
+                  Fraude Zero
                 </Link>
               </li>
               <li>
@@ -120,14 +119,43 @@ const Footer = () => {
                   Política de Cookies
                 </Link>
               </li>
+            </ul>
+          </div>
+          
+          {/* Mobile apps */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Baixe o app</h3>
+            <ul className="space-y-3">
               <li>
-                <Link to="/compliance" className="text-gray-400 hover:text-white transition-colors">
-                  Compliance
+                <Link to="/termos" className="text-gray-400 hover:text-white transition-colors">
+                  <img src={android} alt='' className='w-36' />
                 </Link>
               </li>
               <li>
-                <Link to="/seguranca" className="text-gray-400 hover:text-white transition-colors">
-                  Segurança
+                <Link to="/privacidade" className="text-gray-400 hover:text-white transition-colors">
+                  <img src={ios} alt='' className='w-36' />
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacidade" className="text-gray-400 hover:text-white transition-colors">
+                  <ReclameAqui />
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Secure payments */}
+          <div>
+            <h3 className="text-lg font-semibold">Pagamento seguro!</h3>
+            <ul className="flex items-center space-x-3">
+              <li>
+                <Link to="/termos" className="text-gray-400 hover:text-white transition-colors">
+                  <img src={pci} alt='' className='w-28 rounded-sm' />
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacidade" className="text-gray-400 hover:text-white transition-colors">
+                  <img src={b3} alt='' className='w-24' />
                 </Link>
               </li>
             </ul>
@@ -153,13 +181,6 @@ const Footer = () => {
               aria-label="Instagram"
             >
               <Instagram size={20} />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter size={20} />
             </a>
             <a
               href="#"
