@@ -27,14 +27,14 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="como-funciona" className="py-20 bg-white">
+    <section id="como-funciona" className="py-20 bg-gray-50">
       <div className="container-custom">
         <FadeIn>
           <h2 className="text-center text-3xl md:text-4xl font-bold mb-4">
             Como Funciona
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Sua maquininha virtual em 4 passos simples
+            Sua maquininha virtual na palma da mão em 4 passos simples
           </p>
         </FadeIn>
 

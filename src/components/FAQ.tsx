@@ -39,34 +39,54 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 const FAQ = () => {
   const faqs = [
     {
-      question: "Quanto tempo leva para receber meu dinheiro?",
+      question: "A RecebeAqui é segura? Possui certificações?",
       answer:
-        "Para pagamentos via PIX, o recebimento é instantâneo. Para cartões de crédito, o prazo padrão é de até 2 dias úteis. Para boletos, após a compensação (até 3 dias úteis), o valor é liberado em 1 dia útil.",
+        "Sim, a RecebeAqui é extremamente segura. Possuímos certificação internacional PCI DSS, somos verificados pelo ReclameAqui e temos parceria oficial com a B3. Estes são os mais altos padrões de segurança para sistemas de pagamento.",
     },
     {
-      question: "Quais são as taxas cobradas?",
+      question: "Como funciona a proteção contra fraudes e chargebacks?",
       answer:
-        "As taxas variam de acordo com o seu plano e volume de vendas. Oferecemos planos a partir de 0,99% por transação, sem mensalidades ou taxas ocultas. Entre em contato com nossa equipe de vendas para uma proposta personalizada.",
+        "Nossa plataforma utiliza um sistema avançado de análise de risco que verifica cada transação em tempo real. Para chargebacks, oferecemos garantias em casos aprovados pelo nosso sistema antifraude, protegendo seu negócio de contestações injustas.",
     },
     {
-      question: "Preciso ter CNPJ para utilizar o RecebeAqui?",
+      question: "Quanto tempo demora para eu receber o dinheiro das vendas?",
       answer:
-        "Não! Aceitamos tanto CNPJ quanto CPF. Profissionais autônomos e MEIs podem utilizar normalmente nossa plataforma com seu CPF.",
+        "Para pagamentos via PIX, o recebimento é instantâneo. Para cartões de crédito, o prazo padrão é de apenas 1 dia útil, um dos mais rápidos do mercado. Para boletos, após a compensação, o valor é liberado em 1 dia útil.",
     },
     {
-      question: "Como funciona a integração com meu site ou e-commerce?",
+      question: "Quais são as taxas por transação?",
       answer:
-        "Oferecemos diferentes formas de integração: plugins para as principais plataformas de e-commerce, botões de pagamento para copiar e colar em seu site, links e QR codes para compartilhar com seus clientes, além de uma API completa para integrações personalizadas.",
+        "Nossas taxas começam em 0,99% por transação, dependendo do seu volume de vendas e do plano escolhido. Utilize nosso simulador de taxas nesta página para calcular exatamente quanto pagará em cada transação.",
     },
     {
-      question: "Existe um valor mínimo para recebimento?",
+      question: "Existe alguma mensalidade ou custo fixo?",
       answer:
-        "Não há valor mínimo para transações ou recebimentos. Você pode receber qualquer valor, desde centavos até milhares de reais.",
+        "Não! Você só paga pelas vendas realizadas. Não cobramos mensalidade, taxa de adesão, ou qualquer outro custo fixo. Somente a taxa por transação quando você efetivamente vende.",
     },
     {
-      question: "Como funciona a proteção contra fraudes?",
+      question: "Posso parcelar em quantas vezes?",
       answer:
-        "Nossa plataforma conta com um sistema avançado de análise antifraude que verifica cada transação em tempo real. Também oferecemos ferramentas adicionais de segurança como 3D Secure e monitoramento constante para proteger seu negócio.",
+        "Oferecemos parcelamento em até 21 vezes, um dos maiores do mercado. Isso ajuda a aumentar seu ticket médio e converter mais vendas.",
+    },
+    {
+      question: "Como funciona o split de pagamento entre parceiros?",
+      answer:
+        "O split permite divisão automática dos valores recebidos entre diferentes contas. É ideal para marketplaces, comissões ou negócios com sócios, eliminando a necessidade de transferências manuais.",
+    },
+    {
+      question: "Preciso ter CNPJ para usar a RecebeAqui?",
+      answer:
+        "Não! Aceitamos tanto CNPJ quanto CPF. Profissionais autônomos podem utilizar normalmente nossa plataforma apenas com seu CPF.",
+    },
+    {
+      question: "Como faço para gerar um link de pagamento?",
+      answer:
+        "É muito simples: basta criar sua conta, configurar o valor e as opções de pagamento desejadas, e o link estará pronto para compartilhar com seus clientes via WhatsApp, e-mail, redes sociais ou qualquer outro canal.",
+    },
+    {
+      question: "Posso fazer cobranças recorrentes (mensais)?",
+      answer:
+        "Sim! Nossa plataforma oferece sistema completo de assinaturas e cobranças recorrentes, ideal para mensalidades, planos e serviços por assinatura. Tudo automatizado e com controle total.",
     },
   ];
 
