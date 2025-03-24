@@ -1,379 +1,316 @@
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Info, HelpCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import FadeIn from "./FadeIn";
+import FadeIn from "@/components/FadeIn";
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  DollarSign,
+  PiggyBank,
+  Zap
+} from "lucide-react";
 
-const feeStructure = {
-  boleto: 3.9,
-  cancelamentoBoleto: 3.9,
-  ted: 2.5,
-  debito: {
-    tarifa: 0,
-    taxa: 0
+// Fee structure based on the CSV data
+const fees = {
+  boleto: {
+    fee: 3.9, // TarifaBoleto
+    cancellationFee: 3.9, // TarifaCancelamentoBoleto
   },
-  credito: {
-    tarifa: 0,
-    taxas: {
-      parcela1: 2.99,
-      parcela2a6: 3.3,
-      parcela7a12: 3.7,
-      parcela13a21: 3.7
+  ted: {
+    fee: 2.5, // TarifaTED
+  },
+  debit: {
+    fee: 0, // TarifaDebito
+    rate: 0, // TaxaDebito
+  },
+  credit: {
+    fee: 0, // TarifaCredito
+    rates: {
+      oneInstallment: 2.99, // TaxaCredito1
+      twoToSix: 3.3, // TaxaCredito2A6
+      sevenToTwelve: 3.7, // TaxaCredito7A12
+      thirteenToTwentyOne: 3.7, // TaxaCredito13A21
     }
   },
-  antecipacao: {
-    taxaAvulsa: 0.07,
-    taxaAutomatica: [
-      4.3,   // 1 parcela
-      6.3,   // 2 parcelas
-      7.5,   // 3 parcelas
-      8.9,   // 4 parcelas
-      9.9,   // 5 parcelas
-      10.9,  // 6 parcelas
-      12.9,  // 7 parcelas
-      13.9,  // 8 parcelas
-      15.9,  // 9 parcelas
-      16.9,  // 10 parcelas
-      17.9,  // 11 parcelas
-      18.9,  // 12 parcelas
-      19.99, // 13 parcelas
-      20.5,  // 14 parcelas
-      20.99, // 15 parcelas
-      22.99, // 16 parcelas
-      23.99, // 17 parcelas
-      24.99, // 18 parcelas
-      25.99, // 19 parcelas
-      26.99, // 20 parcelas
-      27.99  // 21 parcelas
+  anticipation: {
+    rate: 0.07, // TaxaAntecipacao (daily rate)
+    automatic: [
+      4.3,   // 1 installment
+      6.3,   // 2 installments
+      7.5,   // 3 installments
+      8.9,   // 4 installments
+      9.9,   // 5 installments
+      10.9,  // 6 installments
+      12.9,  // 7 installments
+      13.9,  // 8 installments
+      15.9,  // 9 installments
+      16.9,  // 10 installments
+      17.9,  // 11 installments
+      18.9,  // 12 installments
+      19.99, // 13 installments
+      20.5,  // 14 installments
+      20.99, // 15 installments
+      22.99, // 16 installments
+      23.99, // 17 installments
+      24.99, // 18 installments
+      25.99, // 19 installments
+      26.99, // 20 installments
+      27.99  // 21 installments
     ]
   }
 };
 
 const TaxSimulator = () => {
-  const [saleValue, setSaleValue] = useState<string>("1000");
-  const [installments, setInstallments] = useState<string>("1");
-  const [paymentMethod, setPaymentMethod] = useState<"credit" | "debit" | "pix" | "boleto">("credit");
-  const [autoAdvance, setAutoAdvance] = useState<boolean>(true);
+  const [paymentMethod, setPaymentMethod] = useState("credit");
+  const [amount, setAmount] = useState(1000);
+  const [installments, setInstallments] = useState(1);
+  const [automaticAnticipation, setAutomaticAnticipation] = useState(true);
   
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
-
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(2)}%`;
-  };
-
-  const getTaxRate = () => {
-    const installmentsNum = parseInt(installments) || 1;
+  const [receivableAmount, setReceivableAmount] = useState(0);
+  const [feeAmount, setFeeAmount] = useState(0);
+  const [anticipationFee, setAnticipationFee] = useState(0);
+  const [totalFees, setTotalFees] = useState(0);
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [receiveDate, setReceiveDate] = useState("");
+  
+  useEffect(() => {
+    calculateResults();
+  }, [amount, paymentMethod, installments, automaticAnticipation]);
+  
+  const calculateResults = () => {
+    let calculatedFeeAmount = 0;
+    let calculatedAnticipationFee = 0;
+    let calculatedFinalAmount = 0;
+    let date = new Date();
+    date.setDate(date.getDate() + 1); // Default: next business day
     
     if (paymentMethod === "credit") {
-      // Base credit card fee based on installments
-      let baseTax = 0;
-      if (installmentsNum === 1) {
-        baseTax = feeStructure.credito.taxas.parcela1;
-      } else if (installmentsNum >= 2 && installmentsNum <= 6) {
-        baseTax = feeStructure.credito.taxas.parcela2a6;
-      } else if (installmentsNum >= 7 && installmentsNum <= 12) {
-        baseTax = feeStructure.credito.taxas.parcela7a12;
+      // Apply credit card fees based on installments
+      let rate = 0;
+      
+      if (installments === 1) {
+        rate = fees.credit.rates.oneInstallment;
+      } else if (installments >= 2 && installments <= 6) {
+        rate = fees.credit.rates.twoToSix;
+      } else if (installments >= 7 && installments <= 12) {
+        rate = fees.credit.rates.sevenToTwelve;
       } else {
-        baseTax = feeStructure.credito.taxas.parcela13a21;
+        rate = fees.credit.rates.thirteenToTwentyOne;
       }
       
-      // If auto advance is on, add the appropriate advance fee
-      if (autoAdvance && installmentsNum > 1) {
-        return feeStructure.antecipacao.taxaAutomatica[installmentsNum - 1];
-      }
+      calculatedFeeAmount = (amount * rate) / 100;
       
-      return baseTax;
+      // Apply anticipation fee if selected
+      if (automaticAnticipation) {
+        // Use automatic anticipation rates based on installments
+        const anticipationRate = fees.anticipation.automatic[installments - 1];
+        calculatedAnticipationFee = (amount * anticipationRate) / 100;
+        date.setDate(date.getDate()); // Next business day after transaction
+      } else {
+        // Regular payment schedule (30 days for each installment)
+        date.setDate(date.getDate() + 29); // 30 days for the first installment
+      }
     } else if (paymentMethod === "debit") {
-      return feeStructure.debito.taxa;
+      calculatedFeeAmount = amount * (fees.debit.rate / 100);
+      // Debit cards are usually next business day
+      date.setDate(date.getDate());
     } else if (paymentMethod === "boleto") {
-      return 1.99; // Fixed percentage for boleto
-    } else {
-      return 0.99; // Fixed percentage for PIX
+      calculatedFeeAmount = fees.boleto.fee;
+      // Boletos typically take 1-3 business days to process after payment
+      date.setDate(date.getDate() + 2);
+    } else if (paymentMethod === "pix") {
+      // PIX is usually same day or next business day
+      calculatedFeeAmount = 0; // No fee for PIX
+      date.setDate(date.getDate());
     }
+    
+    // Calculate final values
+    const totalFeesCalculated = calculatedFeeAmount + calculatedAnticipationFee;
+    calculatedFinalAmount = amount - totalFeesCalculated;
+    
+    // Format date
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('pt-BR', options);
+    
+    // Update state
+    setReceivableAmount(amount);
+    setFeeAmount(calculatedFeeAmount);
+    setAnticipationFee(calculatedAnticipationFee);
+    setTotalFees(totalFeesCalculated);
+    setFinalAmount(calculatedFinalAmount);
+    setReceiveDate(formattedDate);
   };
   
-  const getFixedFee = () => {
-    if (paymentMethod === "boleto") {
-      return feeStructure.boleto;
-    } else if (paymentMethod === "ted") {
-      return feeStructure.ted;
-    }
-    return 0;
-  };
-
-  const calculateResults = () => {
-    const value = parseFloat(saleValue.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
-    const installmentsNum = parseInt(installments) || 1;
-    const taxRate = getTaxRate() / 100; // Convert percentage to decimal
-    const fixedFee = getFixedFee();
-    
-    const taxAmount = (value * taxRate) + fixedFee;
-    const netValue = value - taxAmount;
-    
-    // Calculate estimated receipt date
-    let receiptDate = "";
-    if (autoAdvance || installmentsNum === 1) {
-      receiptDate = "1 dia útil";
-    } else {
-      receiptDate = "30 dias (1ª parcela)";
-    }
-    
-    // Calculate savings compared to market average
-    const marketAverageTax = 0.0499; // 4.99% market average
-    const marketAvgAmount = value * marketAverageTax;
-    const savings = marketAvgAmount - taxAmount;
-    
-    return {
-      grossValue: value,
-      taxAmount,
-      taxRate: taxRate * 100,
-      netValue,
-      receiptDate,
-      marketAvgAmount,
-      savings
-    };
-  };
-
-  const results = calculateResults();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
-    if (name === "saleValue") {
-      // Remove non-numeric characters but keep commas and dots
-      const cleanValue = value.replace(/[^\d,.-]/g, '');
-      setSaleValue(cleanValue);
-    } else if (name === "installments") {
-      // Ensure it's a number between 1 and 21
-      const installmentsValue = Math.min(21, Math.max(1, parseInt(value) || 1));
-      setInstallments(installmentsValue.toString());
-    }
-  };
-
-  // Determine if installments should be enabled (only for credit card)
-  const isInstallmentsEnabled = paymentMethod === "credit";
-
   return (
-    <section id="simulador" className="py-20 bg-white">
+    <section className="py-20 bg-gray-50">
       <div className="container-custom">
         <FadeIn>
-          <h2 className="text-center text-3xl md:text-4xl font-bold mb-4">
-            Simulador de Taxas
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-center">
+            Simule quanto você vai receber
           </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Calcule quanto você vai receber por cada venda e quanto economizará com o RecebeAqui
+          <p className="text-gray-600 text-center mb-10 max-w-3xl mx-auto">
+            Use nossa calculadora para simular quanto você receberá ao utilizar a RecebeAqui para suas vendas.
           </p>
-        </FadeIn>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <FadeIn>
-            <Card className="border-2 border-gray-100">
-              <CardHeader>
-                <CardTitle>Simulador de Taxas</CardTitle>
-                <CardDescription>
-                  Configure os detalhes da sua venda para calcular o valor que você receberá
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="saleValue">Valor da venda</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
-                      <Input
-                        id="saleValue"
-                        name="saleValue"
-                        className="pl-9"
-                        value={saleValue}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+          
+          <Card className="bg-white shadow-lg rounded-xl overflow-hidden">
+            <CardContent className="p-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="p-6 lg:p-8 bg-primary-50">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Calculator size={24} className="text-primary" />
+                    <h3 className="text-xl font-semibold">Detalhes da transação</h3>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label>Método de pagamento</Label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      <Button
-                        type="button"
-                        variant={paymentMethod === "credit" ? "default" : "outline"}
-                        className={paymentMethod === "credit" ? "bg-primary" : ""}
-                        onClick={() => setPaymentMethod("credit")}
-                      >
-                        Cartão de Crédito
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={paymentMethod === "debit" ? "default" : "outline"}
-                        className={paymentMethod === "debit" ? "bg-primary" : ""}
-                        onClick={() => setPaymentMethod("debit")}
-                      >
-                        Cartão de Débito
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={paymentMethod === "pix" ? "default" : "outline"}
-                        className={paymentMethod === "pix" ? "bg-primary" : ""}
-                        onClick={() => setPaymentMethod("pix")}
-                      >
-                        PIX
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={paymentMethod === "boleto" ? "default" : "outline"}
-                        className={paymentMethod === "boleto" ? "bg-primary" : ""}
-                        onClick={() => setPaymentMethod("boleto")}
-                      >
-                        Boleto
-                      </Button>
+                  
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="payment-method">Forma de pagamento</Label>
+                      <Tabs defaultValue="credit" value={paymentMethod} onValueChange={setPaymentMethod} className="w-full">
+                        <TabsList className="w-full grid grid-cols-4">
+                          <TabsTrigger value="credit">
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Crédito</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="debit">
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Débito</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="pix">
+                            <Zap className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">PIX</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="boleto">
+                            <Calendar className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Boleto</span>
+                          </TabsTrigger>
+                        </TabsList>
+                      </Tabs>
                     </div>
-                  </div>
-
-                  {isInstallmentsEnabled && (
-                    <>
-                      <div className="space-y-2">
-                        <Label htmlFor="installments">Número de parcelas</Label>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="transaction-value">Valor da venda (R$)</Label>
+                      <div className="relative">
+                        <DollarSign className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                         <Input
-                          id="installments"
-                          name="installments"
+                          id="transaction-value"
                           type="number"
-                          min="1"
-                          max="21"
-                          value={installments}
-                          onChange={handleInputChange}
-                          disabled={!isInstallmentsEnabled}
+                          min="0"
+                          placeholder="1000.00"
+                          className="pl-10"
+                          value={amount}
+                          onChange={(e) => setAmount(Number(e.target.value))}
                         />
-                        <p className="text-xs text-gray-500">De 1 a 21 parcelas</p>
                       </div>
-
-                      {parseInt(installments) > 1 && (
-                        <div className="flex items-center justify-between space-x-2 p-4 rounded-lg bg-gray-50">
-                          <div className="flex items-center space-x-2">
-                            <Label htmlFor="auto-advance" className="cursor-pointer">
-                              Antecipação automática
-                            </Label>
-                            <Popover>
-                              <PopoverTrigger>
-                                <HelpCircle size={16} className="text-gray-400 cursor-help" />
-                              </PopoverTrigger>
-                              <PopoverContent className="w-80">
-                                <div className="space-y-2">
-                                  <h4 className="font-medium">Antecipação Automática</h4>
-                                  <p className="text-sm">
-                                    Com a antecipação automática, você recebe o valor total da venda em 1 dia útil, 
-                                    ao invés de esperar pelo pagamento de cada parcela (30, 60, 90 dias...).
-                                  </p>
-                                  <p className="text-sm">
-                                    A taxa de antecipação varia conforme o número de parcelas.
-                                  </p>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
+                    </div>
+                    
+                    {paymentMethod === "credit" && (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="installments">Número de parcelas</Label>
+                          <Select 
+                            value={installments.toString()} 
+                            onValueChange={(value) => setInstallments(Number(value))}
+                          >
+                            <SelectTrigger id="installments">
+                              <SelectValue placeholder="Selecione" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 21 }, (_, i) => i + 1).map((num) => (
+                                <SelectItem key={num} value={num.toString()}>
+                                  {num}x {num === 1 ? 'sem juros' : ''}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <Label htmlFor="anticipation">Antecipação automática</Label>
+                            <p className="text-sm text-gray-500">Receba em 1 dia útil</p>
                           </div>
                           <Switch
-                            id="auto-advance"
-                            checked={autoAdvance}
-                            onCheckedChange={setAutoAdvance}
+                            id="anticipation"
+                            checked={automaticAnticipation}
+                            onCheckedChange={setAutomaticAnticipation}
                           />
                         </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-gray-100">
+                  <div className="flex items-center gap-2 mb-6">
+                    <PiggyBank size={24} className="text-primary" />
+                    <h3 className="text-xl font-semibold">Você vai receber</h3>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div className="p-4 bg-green-50 rounded-lg">
+                      <p className="text-sm text-gray-600 mb-1">Valor líquido:</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        R$ {finalAmount.toFixed(2).replace('.', ',')}
+                      </p>
+                      
+                      <div className="flex items-center mt-3 text-sm text-gray-600">
+                        <Calendar size={16} className="mr-2" />
+                        <span>Pagamento em: <strong>{receiveDate}</strong></span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Valor bruto:</span>
+                        <span>R$ {receivableAmount.toFixed(2).replace('.', ',')}</span>
+                      </div>
+                      
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Taxa da transação:</span>
+                        <span>-R$ {feeAmount.toFixed(2).replace('.', ',')}</span>
+                      </div>
+                      
+                      {paymentMethod === "credit" && automaticAnticipation && installments > 1 && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Taxa de antecipação:</span>
+                          <span>-R$ {anticipationFee.toFixed(2).replace('.', ',')}</span>
+                        </div>
                       )}
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </FadeIn>
-
-          <FadeIn delay={200}>
-            <Card className="border-2 border-primary border-opacity-20 bg-primary/5">
-              <CardHeader>
-                <CardTitle>Resultado da Simulação</CardTitle>
-                <CardDescription>
-                  Veja quanto você receberá com base nas configurações escolhidas
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="p-4 rounded-lg bg-white border border-gray-100">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Valor bruto da venda:</span>
-                      <span className="font-semibold">{formatCurrency(results.grossValue)}</span>
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center">
-                        <span className="text-gray-600 mr-1">Taxa aplicada:</span>
-                        <Popover>
-                          <PopoverTrigger>
-                            <Info size={16} className="text-gray-400 cursor-help" />
-                          </PopoverTrigger>
-                          <PopoverContent className="w-80">
-                            <p className="text-sm">
-                              A taxa é calculada com base no método de pagamento, número de parcelas e opção de antecipação.
-                              {autoAdvance && parseInt(installments) > 1 && (
-                                <span className="block mt-2">
-                                  Com a antecipação automática ativada para {installments} parcelas, 
-                                  a taxa é de {formatPercentage(getTaxRate())}.
-                                </span>
-                              )}
-                            </p>
-                          </PopoverContent>
-                        </Popover>
+                      
+                      <div className="flex justify-between font-medium pt-2 border-t">
+                        <span>Total de taxas:</span>
+                        <span>R$ {totalFees.toFixed(2).replace('.', ',')}</span>
                       </div>
-                      <span className="font-semibold text-secondary">{formatPercentage(getTaxRate())}</span>
                     </div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Valor da taxa:</span>
-                      <span className="font-semibold text-red-500">-{formatCurrency(results.taxAmount)}</span>
-                    </div>
-                    <div className="h-px w-full bg-gray-200 my-3"></div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-800 font-medium">Você receberá:</span>
-                      <span className="text-xl font-bold text-primary">{formatCurrency(results.netValue)}</span>
-                    </div>
-                    <div className="mt-3 text-center">
-                      <p className="text-sm text-gray-500">
-                        {isInstallmentsEnabled && parseInt(installments) > 1 ? (
-                          <>Em {installments} parcelas, {autoAdvance ? "recebendo em 1 dia útil (antecipação automática)" : "primeira parcela em 30 dias"}</>
-                        ) : (
-                          <>Recebendo em {results.receiptDate}</>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-lg bg-white border border-gray-100">
-                    <div className="text-center">
-                      <p className="font-medium mb-2">Comparação com concorrentes</p>
-                      <p className="text-sm text-gray-600 mb-4">
-                        Economize até 40% em taxas comparado com outros meios de pagamento
-                      </p>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-gray-600">Concorrente médio:</span>
-                        <span className="font-semibold text-red-500">
-                          {formatCurrency(results.marketAvgAmount)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Sua economia com RecebeAqui:</span>
-                        <span className="font-semibold text-green-600">
-                          {formatCurrency(results.savings > 0 ? results.savings : 0)}
-                        </span>
-                      </div>
+                    
+                    <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                      <p className="font-medium mb-2">Com a RecebeAqui você tem:</p>
+                      <ul className="space-y-1">
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-0.5">✓</span>
+                          <span>Sem mensalidade ou taxas fixas</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-0.5">✓</span>
+                          <span>Proteção contra fraudes e chargebacks</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-0.5">✓</span>
+                          <span>Certificação PCI DSS e parceria com a B3</span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </FadeIn>
-        </div>
+              </div>
+            </CardContent>
+          </Card>
+        </FadeIn>
       </div>
     </section>
   );
