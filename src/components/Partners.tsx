@@ -1,31 +1,38 @@
 
 import FadeIn from "./FadeIn";
+import { CreditCard, Shield, DollarSign, Globe, Calendar, Clock } from "lucide-react";
 
 const Partners = () => {
-  const partners = [
+  const benefits = [
     {
-      name: "Shopify",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg",
+      icon: CreditCard,
+      title: "Maquininha Virtual",
+      description: "Aceite pagamentos na palma da mão sem precisar de equipamentos físicos"
     },
     {
-      name: "WooCommerce",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/2a/WooCommerce_logo.svg",
+      icon: Shield,
+      title: "Proteção Chargeback",
+      description: "Garantia contra contestações de pagamentos em suas vendas"
     },
     {
-      name: "Magento",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/5/55/Magento_Logo.svg",
+      icon: Clock,
+      title: "Recebimento em 1 dia",
+      description: "Dinheiro na sua conta em apenas 1 dia útil após a venda"
     },
     {
-      name: "WordPress",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg",
+      icon: Globe,
+      title: "Cartões Internacionais",
+      description: "Aceite pagamentos de clientes de qualquer lugar do mundo"
     },
     {
-      name: "Prestashop",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/PrestaShop.svg",
+      icon: Calendar,
+      title: "Parcelamento em 21x",
+      description: "Ofereça condições exclusivas de pagamento para seus clientes"
     },
     {
-      name: "VTEX",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/VTEX_Logo.svg",
+      icon: DollarSign,
+      title: "Link Seguro",
+      description: "O link de pagamento mais seguro do mercado para suas vendas"
     },
   ];
 
@@ -33,20 +40,22 @@ const Partners = () => {
     <section className="py-16 bg-gray-50">
       <div className="container-custom">
         <FadeIn>
-          <h3 className="text-center text-lg font-medium text-gray-600 mb-10">
-            Integre facilmente com as principais plataformas
+          <h3 className="text-center text-2xl font-bold text-gray-800 mb-10">
+            A maquininha virtual na palma da sua mão
           </h3>
         </FadeIn>
         
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-          {partners.map((partner) => (
-            <FadeIn key={partner.name} delay={partners.indexOf(partner) * 100}>
-              <div className="group flex items-center justify-center py-3 grayscale opacity-70 transition hover:opacity-100 hover:grayscale-0">
-                <img
-                  src={partner.logo}
-                  alt={`${partner.name} logo`}
-                  className="h-8 md:h-12 object-contain"
-                />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {benefits.map((benefit, index) => (
+            <FadeIn key={benefit.title} delay={index * 100}>
+              <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all h-full">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <benefit.icon size={24} className="text-primary" />
+                  </div>
+                  <h4 className="font-semibold text-lg">{benefit.title}</h4>
+                </div>
+                <p className="text-gray-600">{benefit.description}</p>
               </div>
             </FadeIn>
           ))}

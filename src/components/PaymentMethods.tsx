@@ -1,38 +1,38 @@
 
-import { CreditCard, QrCode, Receipt, Smartphone, Globe, Cpu } from "lucide-react";
+import { CreditCard, ShieldCheck, Clock, Globe, CalendarClock, DollarSign } from "lucide-react";
 import FadeIn from "./FadeIn";
 
 const PaymentMethods = () => {
   const methods = [
     {
       icon: CreditCard,
-      title: "Cartão de Crédito",
-      description: "Aceite os principais cartões com taxas competitivas e parcelamento em até 12x",
+      title: "Maquininha Virtual",
+      description: "Transforme seu celular em uma máquina de cartão com nossa solução de pagamento digital.",
     },
     {
-      icon: QrCode,
-      title: "PIX",
-      description: "Recebimento instantâneo via PIX com confirmação automática e taxas reduzidas",
+      icon: ShieldCheck,
+      title: "Garantia Chargeback",
+      description: "Proteção completa contra contestações de pagamento, garantindo sua segurança financeira.",
     },
     {
-      icon: Receipt,
-      title: "Boleto",
-      description: "Emita boletos com compensação em até 3 dias úteis e notificações automáticas",
-    },
-    {
-      icon: Smartphone,
-      title: "Link de Pagamento",
-      description: "Envie links personalizados por WhatsApp, SMS ou email para receber à distância",
+      icon: Clock,
+      title: "Recebimento em 1 Dia",
+      description: "Dinheiro na sua conta em apenas 1 dia útil após a venda ser confirmada.",
     },
     {
       icon: Globe,
-      title: "Checkout Online",
-      description: "Integre facilmente em seu site ou e-commerce com nossa API ou plugins",
+      title: "Cartões Internacionais",
+      description: "Aceite pagamentos de clientes de qualquer lugar do mundo sem complicações.",
     },
     {
-      icon: Cpu,
-      title: "Assinaturas",
-      description: "Crie planos recorrentes e gerencie suas assinaturas de forma automática",
+      icon: CalendarClock,
+      title: "Parcelamento em 21x",
+      description: "Ofereça até 21 parcelas para seus clientes, aumentando suas chances de venda.",
+    },
+    {
+      icon: DollarSign,
+      title: "Links de Pagamento",
+      description: "O link de pagamento mais seguro do mercado para vender online sem complicações.",
     },
   ];
 
@@ -44,10 +44,10 @@ const PaymentMethods = () => {
       <div className="container-custom relative z-10">
         <FadeIn>
           <h2 className="text-center text-3xl md:text-4xl font-bold mb-4">
-            Aceite Todos os Meios de Pagamento
+            Sua Maquininha na Palma da Mão
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Ofereça mais opções de pagamento para seus clientes e aumente suas vendas em até 30%
+            O link de pagamento mais seguro do mercado com todas as vantagens que você precisa
           </p>
         </FadeIn>
 

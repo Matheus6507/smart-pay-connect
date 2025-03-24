@@ -11,18 +11,18 @@ const HowItWorks = () => {
     },
     {
       number: "02",
-      title: "Configure seus métodos",
-      description: "Escolha quais meios de pagamento deseja aceitar e personalize sua experiência.",
+      title: "Configure seu link de pagamento",
+      description: "Personalize as opções de pagamento, incluindo parcelamento em até 21x e cartões internacionais.",
     },
     {
       number: "03",
-      title: "Integre em seu negócio",
-      description: "Adicione os botões de pagamento em seu site ou use nossos links e QR codes.",
+      title: "Compartilhe com seus clientes",
+      description: "Envie o link de pagamento por WhatsApp, email, redes sociais ou onde preferir.",
     },
     {
       number: "04",
-      title: "Comece a vender",
-      description: "Receba pagamentos de forma rápida e segura, com suporte completo da nossa equipe.",
+      title: "Receba em 1 dia útil",
+      description: "O dinheiro cai na sua conta em apenas 1 dia útil, com total proteção contra chargebacks.",
     },
   ];
 
@@ -34,7 +34,7 @@ const HowItWorks = () => {
             Como Funciona
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Comece a receber pagamentos em 4 passos simples
+            Sua maquininha virtual em 4 passos simples
           </p>
         </FadeIn>
 
